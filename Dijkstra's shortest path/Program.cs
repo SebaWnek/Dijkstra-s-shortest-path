@@ -2,14 +2,19 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 using System.IO;
 
 namespace Dijkstra_s_shortest_path
 {
     class Program
-    {
+    {   /// <summary>
+        /// Map accessible by all methods in Program class
+        /// </summary>
         static int[,] map;
+        /// <summary>
+        /// Main method initializing sequence of methods to resolve problem
+        /// </summary>
+        /// <param name="args"></param>
         static void Main(string[] args)
         {
             List<string[]> records = new List<string[]>();
@@ -23,7 +28,11 @@ namespace Dijkstra_s_shortest_path
 
             Console.ReadLine();
         }
-
+        /// <summary>
+        /// Method for running path calculation for each pair in input file
+        /// </summary>
+        /// <param name="map">Map of graph</param>
+        /// <param name="question">List of pairs of nodes to find distance between</param>
         private static void FindAllPaths(ref int[,] map, List<string[]> question)
         {
             GraphPath path;
@@ -33,7 +42,10 @@ namespace Dijkstra_s_shortest_path
                 FindPath(startEnd);
             }
         }
-
+        /// <summary>
+        /// Main part of Dijkstra's algorythm
+        /// </summary>
+        /// <param name="startEnd">Star and end nodes</param>
         private static void FindPath(string[] startEnd)
         {
             char startNode = startEnd[0][0];
@@ -78,7 +90,12 @@ namespace Dijkstra_s_shortest_path
                 Console.WriteLine($"No path found between {startNode} and {endNode}!");
             }
         }
-
+        /// <summary>
+        /// Method for finding out final path based on list of distances from begining
+        /// </summary>
+        /// <param name="visited">List of nodes accessible from start node and distances from it with previous nodes for each other</param>
+        /// <param name="startEnd">Path start and end</param>
+        /// <returns></returns>
         private static GraphPath RebuildPath(Dictionary<char, int[]> visited, string[] startEnd)
         {
             char startNode = startEnd[0][0];
@@ -96,7 +113,10 @@ namespace Dijkstra_s_shortest_path
 
             return result;
         }
-
+        /// <summary>
+        /// Method for printing map to console
+        /// </summary>
+        /// <param name="map">Map of graph</param>
         static void PrintMap(int[,] map)
         {
             int size = map.GetLength(0);
@@ -117,7 +137,11 @@ namespace Dijkstra_s_shortest_path
             }
             Console.WriteLine();
         }
-
+        /// <summary>
+        /// Method generating map based on nodes' distances
+        /// </summary>
+        /// <param name="records">List of nodes' distances</param>
+        /// <returns>Graph map</returns>
         private static int[,] GenerateMap(List<string[]> records)
         {
             records.Sort((x, y) => x[0].CompareTo(y[0]));
@@ -146,7 +170,12 @@ namespace Dijkstra_s_shortest_path
 
             return map;
         }
-
+        /// <summary>
+        /// Method reading file with graph and question data and extracting from it node distances and list of nodes pairs to finds distances between
+        /// </summary>
+        /// <param name="fileName">Path to file with data</param>
+        /// <param name="question">List of pairs of nodes to calculate distance between</param>
+        /// <returns>List of distances between nodes</returns>
         static List<string[]> ReadFile(string fileName, out List<string[]> question)
         {
             List<string[]> records = new List<string[]>();
@@ -170,21 +199,33 @@ namespace Dijkstra_s_shortest_path
             }
             return records;
         }
-
+        /// <summary>
+        /// Priority queue implenetation for keeping current node, it's distance from begining and previous node
+        /// </summary>
         class PriorityQueue
         {
+            /// <summary>
+            /// Keeps all data
+            /// </summary>
             private SortedDictionary<double, char[]> list;
-
+            /// <summary>
+            /// Constructor initializing dictionary
+            /// </summary>
             public PriorityQueue()
             {
                 list = new SortedDictionary<double, char[]>();
             }
-
+            /// <summary>
+            /// Count of elements
+            /// </summary>
             public int Count
             {
                 get { return list.Count; }
             }
-
+            /// <summary>
+            /// Method for enqueueing node
+            /// </summary>
+            /// <param name="node">Node info - current node, distance to begining and previous node for resolving path</param>
             public void Enqueue(Tuple<char, int, char> node)
             {
                 double key = node.Item2;
@@ -202,7 +243,10 @@ namespace Dijkstra_s_shortest_path
                     }
                 }
             }
-
+            /// <summary>
+            /// Dequeueing node
+            /// </summary>
+            /// <returns>Node info - current node, distance to begining and previous node for resolving path</returns>
             public Tuple<char,int, char> Dequeue()
             {
                 if (Count > 0)
@@ -216,7 +260,10 @@ namespace Dijkstra_s_shortest_path
                     throw new Exception("no more items");
                 }
             }
-
+            /// <summary>
+            /// Allows to peek first node
+            /// </summary>
+            /// <returns>Node info - current node, distance to begining and previous node for resolving path</returns>
             public Tuple<char, int, char> Peek()
             {
                 if (Count > 0)
@@ -230,7 +277,9 @@ namespace Dijkstra_s_shortest_path
             }
         }
     }
-
+    /// <summary>
+    /// Class for keeping final path - length and list of nodes
+    /// </summary>
     internal class GraphPath
     {
         public int Length { get; set; }
